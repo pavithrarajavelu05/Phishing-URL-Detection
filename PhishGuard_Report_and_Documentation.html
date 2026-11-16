@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PhishGuard - Complete Project Report & Documentation Guide</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      line-height: 1.6;
+      color: #1e293b;
+      background: #f8fafc;
+      padding: 30px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .container {
+      background: #ffffff;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      border: 1px solid #e2e8f0;
+    }
+    h1, h2, h3, h4 { color: #0f172a; }
+    h1 { border-bottom: 2px solid #0284c7; padding-bottom: 10px; font-size: 24px; }
+    h2 { margin-top: 30px; border-bottom: 1px solid #cbd5e1; padding-bottom: 6px; font-size: 19px; color: #0369a1; }
+    h3 { font-size: 16px; margin-top: 20px; }
+    pre {
+      background: #0f172a;
+      color: #38bdf8;
+      padding: 16px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: Consolas, monospace;
+      font-size: 13px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 14px;
+    }
+    th, td {
+      border: 1px solid #cbd5e1;
+      padding: 10px 14px;
+      text-align: left;
+    }
+    th {
+      background: #f1f5f9;
+      font-weight: bold;
+    }
+    .badge {
+      background: #e0f2fe;
+      color: #0369a1;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-weight: bold;
+      font-size: 12px;
+    }
+    .card {
+      background: #f8fafc;
+      border-left: 4px solid #0284c7;
+      padding: 14px;
+      margin: 16px 0;
+      border-radius: 0 8px 8px 0;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      .container { box-shadow: none; border: none; padding: 0; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>🛡️ PhishGuard: Project Documentation & Report Materials</h1>
+  <p><strong>VTU 7th Semester &bull; Information Network and Security (INS) Mini Project</strong></p>
+  <p><em>Share this file with your project teammates and friends. It contains the complete report materials, Table of Contents, theory, viva Q&amp;A, and execution guide.</em></p>
+
+  <h2>1. Table of Contents (Report Format)</h2>
+  <pre>
+                            TABLE OF CONTENTS
+
+SL No.                                                        Page No
+
+        ABSTRACT ................................................. I
+
+1.      INTRODUCTION ............................................. 1
+        1.1 Overview ............................................. 1
+        1.2 Problem Statement & Objectives ....................... 1
+
+2.      THEORY ................................................... 2
+        2.1 Phishing Attack Vectors & Quishing ................... 2
+        2.2 Heuristic Detection vs Blacklisting .................. 4
+
+3.      SYSTEM DESIGN ............................................ 7
+        3.1 System Architecture .................................. 7
+        3.2 Heuristic Rules & Weight Matrix ...................... 8
+
+4.      IMPLEMENTATION ........................................... 9
+        4.1 Backend Engine (Flask & MongoDB) ..................... 9
+        4.2 Frontend Dashboard (React) ........................... 10
+        4.3 QR Code & Bulk Scanner Modules ....................... 11
+
+5.      RESULTS .................................................. 12
+        5.1 Test Cases & Detection Verdicts ...................... 12
+        5.2 Dual-Engine Performance Analysis ..................... 16
+
+6.      ADVANTAGES ............................................... 21
+7.      LIMITATIONS .............................................. 22
+8.      FUTURE SCOPE ............................................. 23
+9.      CONCLUSION ............................................... 24
+10.     REFERENCES ............................................... 25
+11.     PROJECT REPOSITORY ....................................... 26
+  </pre>
+
+  <h2>2. Abstract</h2>
+  <p>Phishing attacks and social engineering campaigns remain among the most prevalent vectors for credential theft, financial fraud, and unauthorized perimeter intrusion. Conventional defense mechanisms rely heavily on static blacklist feeds, which fail against newly crafted zero-day phishing links and novel evasion techniques such as QR code phishing (Quishing), lookalike homograph brand spoofing, and excessive subdomain masking. To address these vulnerabilities, this project presents <strong>PhishGuard</strong>, an intelligent, proactive phishing URL detection and risk analysis system. Designed as a zero-execution framework, PhishGuard statically inspects target links without navigating to or executing untrusted code, eliminating drive-by download risks. The core engine deploys a ten-rule lexical and structural heuristic weight matrix to evaluate suspicious indicators—including raw IP hosts, deceptive brand impersonation, abused top-level domains (TLDs), and URI credential trickery—yielding an explainable risk index scaled from 0 to 100 alongside classified verdicts of Safe, Suspicious, or Phishing. To bridge novel and historical threat detection, the system implements a dual-engine architecture correlating autonomous heuristics with live Google Safe Browsing v4 threat feeds. Built on a decoupled stack featuring a modern React frontend dashboard, a lightweight Python Flask RESTful microservice, and MongoDB for persistent audit telemetry, PhishGuard supports single URL inspection, bulk CSV processing, safe QR code extraction, interactive cybersecurity awareness, and automated executive PDF report compilation. Empirical evaluations demonstrate sub-second latency with high precision in isolating simulated and real-world phishing vectors, presenting an effective, explainable layer of defense for modern network security.</p>
+  <p><strong>Keywords:</strong> Phishing Detection, Network Security, Heuristic Analysis, Zero-Day Detection, Google Safe Browsing, Explainable Security, QR Phishing (Quishing), Risk Assessment.</p>
+
+  <h2>3. Introduction</h2>
+  <h3>1.1 Overview</h3>
+  <p>In the contemporary digital era, the widespread adoption of cloud computing, online banking, and enterprise web applications has fundamentally transformed communication and commerce. However, this ubiquitous reliance on digital systems has significantly amplified the cyber-threat landscape. Among diverse attack vectors, social engineering—predominantly executed through phishing—remains the leading entry point exploited by adversaries to orchestrate corporate data breaches, financial fraud, and credential theft. By impersonating trusted organizations, financial institutions, and enterprise portals, attackers manipulate human trust to intercept sensitive credentials and personal data.</p>
+  <p>Conventional perimeter security solutions and secure email gateways rely primarily on reactive blacklist databases. While effective against known, established malicious sites, static blacklists exhibit an unavoidable latency gap of several hours to days between the initial launch of an attack and its public indexation. Cybercriminals actively exploit this window by deploying short-lived, zero-day phishing links that are discarded before detection occurs. Furthermore, adversaries increasingly employ advanced evasion techniques—including brand typosquatting, raw IP hosting, disposable top-level domains (TLDs), excessive subdomain nesting, and Quishing (QR code phishing)—which effortlessly bypass traditional text-based security filters.</p>
+  <p>To address these vulnerabilities, PhishGuard is developed as an intelligent, zero-execution phishing URL detection and risk analysis system. Designed on a proactive security paradigm, PhishGuard statically inspects target links without navigating to or executing untrusted code, completely eliminating drive-by malware infection risks. The platform combines a calibrated ten-rule heuristic feature weight matrix with live Google Safe Browsing v4 threat intelligence feeds to deliver an explainable risk score (0–100) and categorized verdicts (Safe, Suspicious, or Phishing). Featuring automated QR code decoding, bulk CSV feed processing, and audit-ready report compilation, PhishGuard provides a robust, transparent, and multi-layered defense system against modern web-based deception.</p>
+
+  <h3>1.2 Problem Statement</h3>
+  <p>Conventional reactive blacklists fail to detect short-lived zero-day phishing attacks during their initial launch window, while modern adversaries evade filters using brand typosquatting, raw IP hosts, and optical QR codes. Furthermore, existing scanners lack transparent risk explainability and safe zero-execution guarantees. Hence, there is a critical need for an automated, proactive heuristic framework that accurately identifies, weights, and explains deceptive URL threats in real time.</p>
+
+  <h2>4. Theory</h2>
+  <h3>2.1 Phishing Attack Vectors & Quishing</h3>
+  <p>Phishing is a deceptive social engineering technique in which an adversary masquerades as a trusted entity to manipulate victims into revealing confidential credentials, session tokens, personal identity details, or financial data. Modern threat actors leverage sophisticated structural and lexical manipulation within URLs to bypass perimeter firewalls and deceive human cognitive verification. The primary URL-based phishing vectors include:</p>
+  <ol>
+    <li><strong>Typosquatting and Homograph Spoofing:</strong> Attackers register lookalike domain names that visually mimic legitimate brands by exploiting typographical errors or subtle character substitutions (e.g., substituting the lowercase letter l with a capital I or digit 1, such as <code>paypaI.com</code> or <code>goog1e.com</code>).</li>
+    <li><strong>Subdomain Masking and Brand Stacking:</strong> Attackers create deep subdomain hierarchies on an inexpensive domain (e.g., <code>chase.com.security-update.xyz</code>). Unsuspecting users observe the trusted brand name at the start of the address without realizing the authoritative root domain is actually <code>security-update.xyz</code>.</li>
+    <li><strong>URL Shortening and Redirection Obfuscation:</strong> By passing malicious links through public URL shortening services (such as Bitly, TinyURL, or t.co), attackers conceal the true destination domain, token parameters, and suspicious top-level domains.</li>
+    <li><strong>URI Authentication Redirection (@ Symbol Trick):</strong> Based on standard URI syntax (RFC 3986), any text preceding an @ symbol in a URL is interpreted by web protocols as user authentication credentials rather than the destination host (e.g., <code>http://paypal.com@attacker-server.com/signin</code>).</li>
+    <li><strong>Raw IP Address Hosting:</strong> Threat actors directly host credential-harvesting landing pages on raw IPv4 addresses (e.g., <code>http://192.168.1.100/auth</code>) rather than registering domain names, evading WHOIS and domain reputation checks.</li>
+  </ol>
+  <p><strong>Quishing (QR Code Phishing)</strong> is an emerging social engineering attack vector where threat actors embed malicious, credential-harvesting URLs inside optical 2D Quick Response (QR) barcodes instead of conventional plain-text hyperlinks. Traditional secure email gateways and perimeter filters are primarily engineered to parse textual content and standard HTML <code>&lt;a&gt;</code> tags. Consequently, because an encoded URL is stored purely as a graphical pixel matrix, traditional security filters treat the QR code as an innocuous image attachment, allowing the hidden phishing payload to bypass perimeter inspection undetected.</p>
+  <p>Threat actors commonly distribute these fraudulent QR codes through spear-phishing emails, spoofed multi-factor authentication (MFA) reset alerts, and digital PDF invoices. Once delivered, victims are prompted to scan the code using personal smartphones or mobile devices. This creates a severe security blindspot because mobile endpoints frequently operate outside corporate firewalls, VPNs, and endpoint detection and response (EDR) controls, directly exposing users to credential-harvesting portals and unauthorized account takeovers.</p>
+
+  <h3>2.2 Heuristic Detection vs Blacklisting</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Evaluation Parameter</th>
+        <th>Blacklist-Based Detection</th>
+        <th>Heuristic-Based Detection (PhishGuard)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Detection Nature</strong></td>
+        <td>Reactive (Post-attack discovery)</td>
+        <td>Proactive (Real-time lexical inspection)</td>
+      </tr>
+      <tr>
+        <td><strong>Zero-Day Threat Defense</strong></td>
+        <td>Ineffective (Blind during initial attack hours)</td>
+        <td>Highly Effective (Identifies novel structural patterns)</td>
+      </tr>
+      <tr>
+        <td><strong>Verification Basis</strong></td>
+        <td>Centralized reputation databases</td>
+        <td>Lexical, structural, and semantic rule weights</td>
+      </tr>
+      <tr>
+        <td><strong>False Positive Rate</strong></td>
+        <td>Near zero</td>
+        <td>Low (Subject to rule calibration)</td>
+      </tr>
+      <tr>
+        <td><strong>Evaluation Latency</strong></td>
+        <td>Network lookup dependent</td>
+        <td>Sub-second local execution (&lt; 15 ms)</td>
+      </tr>
+      <tr>
+        <td><strong>Execution Safety</strong></td>
+        <td>Safe (Database lookup)</td>
+        <td>Safe (Static, zero-execution parsing)</td>
+      </tr>
+      <tr>
+        <td><strong>Explainability</strong></td>
+        <td>Opaque (Binary blocked / unblocked)</td>
+        <td>High (Transparent rule weights and evidence)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>5. How to Run & Present (Viva Guide)</h2>
+  <div class="card">
+    <h4>Terminal 1 – Backend (Flask API)</h4>
+    <pre>cd C:\PhishGuard\backend
+myenv\Scripts\activate
+python app.py</pre>
+    <p><em>Runs on port 5000 with MongoDB and Google Safe Browsing integration.</em></p>
+  </div>
+
+  <div class="card">
+    <h4>Terminal 2 – Frontend (React 19 + Vite)</h4>
+    <pre>cd C:\PhishGuard\frontend
+npm run dev</pre>
+    <p><em>Access command dashboard at http://localhost:5173.</em></p>
+  </div>
+
+  <h3>Viva Key Concept (Why Google Shows 0 Matches while Heuristics Flags Phishing)</h3>
+  <p><em>"Google Safe Browsing is a reactive blacklist that only indexes domains that have already been reported and crawled. A newly synthesized zero-day phishing URL is not yet indexed by Google. PhishGuard's proactive heuristic engine intercepts it immediately based on lexical brand spoofing, suspicious TLDs, and keyword indicators before it ever appears on global watchlists."</em></p>
+</div>
+</body>
+</html>
